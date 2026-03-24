@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Programming Fundamentals — Worksuite TAM Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── CSS Tokens ─────────────────────────────────────────── */
+    :root {
+      --ws-orange:       #FF4821;
+      --ws-maroon:       #761900;
+      --ws-black:        #000000;
+      --ws-white:        #FFFFFF;
+      --ws-lavender:     #EEEBFF;
+      --ws-mint:         #C8EDD5;
+      --ws-purple:       #5032A0;
+      --ws-purple-light: #B9ADEA;
+      --ws-gold:         #E1B347;
+      --ws-blue:         #95B1D2;
+      --ws-green:        #006032;
+      --ws-gray:         #DDE3EB;
+      --ws-gray-soft:    #F5F6F8;
+      --font-serif:      Georgia, 'Times New Roman', serif;
+      --font-sans:       system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --font-mono:       'JetBrains Mono', 'Fira Code', monospace;
+    }
+
+    /* ─── Reset ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ws-black);
+      background: var(--ws-white);
+    }
+
+    /* ─── Top Nav ─────────────────────────────────────────────── */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--ws-black);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      height: 56px;
+      border-bottom: 3px solid var(--ws-orange);
+    }
+    .top-nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      flex-shrink: 0;
+      margin-right: 32px;
+    }
+    .top-nav-logo-text {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ws-white);
+      letter-spacing: -0.01em;
+    }
+    .top-nav-logo-text span { color: var(--ws-orange); }
+    .top-nav-divider {
+      width: 1px;
+      height: 24px;
+      background: rgba(255,255,255,0.2);
+      margin-right: 32px;
+    }
+    .top-nav-course {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 500;
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+    }
+    .top-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .top-nav-links::-webkit-scrollbar { display: none; }
+    .nav-pill {
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      padding: 5px 12px;
+      border-radius: 9999px;
+      white-space: nowrap;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-pill:hover, .nav-pill.active {
+      background: var(--ws-orange);
+      color: var(--ws-white);
+    }
+    .nav-pill[data-mod="1"].active { background: var(--ws-orange); }
+    .nav-pill[data-mod="2"].active { background: var(--ws-maroon); }
+    .nav-pill[data-mod="3"].active { background: var(--ws-purple); }
+    .nav-pill[data-mod="4"].active { background: #333; }
+    .nav-pill[data-mod="5"].active { background: var(--ws-purple); }
+    .nav-pill[data-mod="6"].active { background: var(--ws-green); }
+
+    /* ─── Hero ────────────────────────────────────────────────── */
+    .hero {
+      background: var(--ws-orange);
+      padding: 72px 64px;
+      color: var(--ws-white);
+    }
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.85;
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-family: var(--font-serif);
+      font-size: 52px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+      max-width: 700px;
+    }
+    .hero p {
+      font-size: 18px;
+      opacity: 0.9;
+      max-width: 580px;
+      line-height: 1.6;
+    }
+    .hero-meta {
+      display: flex;
+      gap: 32px;
+      margin-top: 40px;
+    }
+    .hero-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .hero-stat-value {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .hero-stat-label {
+      font-size: 12px;
+      opacity: 0.75;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ─── Progress Bar ────────────────────────────────────────── */
+    .progress-bar-container {
+      background: var(--ws-gray-soft);
+      border-bottom: 1px solid var(--ws-gray);
+      padding: 16px 64px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .progress-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #666;
+      white-space: nowrap;
+    }
+    .progress-track {
+      flex: 1;
+      height: 6px;
+      background: var(--ws-gray);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--ws-orange);
+      border-radius: 9999px;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+    .progress-count {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ws-black);
+      white-space: nowrap;
+    }
+
+    /* ─── Layout ──────────────────────────────────────────────── */
+    .page-body {
+      display: flex;
+      min-height: calc(100vh - 56px);
+    }
+
+    /* ─── Sidebar ─────────────────────────────────────────────── */
+    .sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      background: var(--ws-white);
+      border-right: 1px solid var(--ws-gray);
+      position: sticky;
+      top: 56px;
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+      padding: 32px 0;
+    }
+    .sidebar-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #999;
+      padding: 0 24px;
+      margin-bottom: 8px;
+      margin-top: 24px;
+    }
+    .sidebar-section-label:first-child { margin-top: 0; }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 24px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      color: #444;
+      border-left: 3px solid transparent;
+      transition: background 0.12s, color 0.12s, border-color 0.12s;
+    }
+    .sidebar-link:hover {
+      background: var(--ws-gray-soft);
+      color: var(--ws-black);
+    }
+    .sidebar-link.active {
+      border-left-color: var(--ws-orange);
+      background: #FFF4F1;
+      color: var(--ws-orange);
+      font-weight: 600;
+    }
+    .sidebar-link .mod-num {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--ws-gray);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      flex-shrink: 0;
+      transition: background 0.12s, color 0.12s;
+    }
+    .sidebar-link.active .mod-num {
+      background: var(--ws-orange);
+      color: var(--ws-white);
+    }
+    .sidebar-link.done .mod-num {
+      background: var(--ws-green);
+      color: var(--ws-white);
+    }
+    .sidebar-link.done .mod-num::after {
+      content: '';
+    }
+
+    /* ─── Main Content ────────────────────────────────────────── */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* ─── Module Section ──────────────────────────────────────── */
+    .module-section { border-bottom: 1px solid var(--ws-gray); }
+
+    .module-header {
+      padding: 48px 64px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      transition: opacity 0.15s;
+    }
+    .module-header:hover { opacity: 0.92; }
+
+    .module-header-left { flex: 1; }
+    .module-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.75;
+      margin-bottom: 10px;
+    }
+    .module-header h2 {
+      font-family: var(--font-serif);
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+    .module-header p {
+      font-size: 15px;
+      opacity: 0.82;
+      max-width: 560px;
+      line-height: 1.6;
+    }
+    .module-toggle-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.35);
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 4px;
+      transition: background 0.15s, border-color 0.15s;
+      cursor: pointer;
+    }
+    .module-toggle-btn svg { transition: transform 0.3s; }
+    .module-section.open .module-toggle-btn svg { transform: rotate(180deg); }
+
+    /* Module header color themes */
+    .mod-1 .module-header { background: var(--ws-orange); color: var(--ws-white); }
+    .mod-2 .module-header { background: var(--ws-maroon); color: var(--ws-white); }
+    .mod-3 .module-header { background: var(--ws-purple); color: var(--ws-white); }
+    .mod-4 .module-header { background: var(--ws-black); color: var(--ws-white); }
+    .mod-5 .module-header { background: var(--ws-lavender); color: var(--ws-black); }
+    .mod-5 .module-toggle-btn { border-color: rgba(0,0,0,0.2); background: rgba(0,0,0,0.08); }
+    .mod-6 .module-header { background: var(--ws-mint); color: var(--ws-black); }
+    .mod-6 .module-toggle-btn { border-color: rgba(0,0,0,0.2); background: rgba(0,0,0,0.08); }
+
+    /* ─── Module Body ─────────────────────────────────────────── */
+    .module-body {
+      display: none;
+      padding: 40px 64px 56px;
+    }
+    .module-section.open .module-body { display: block; }
+
+    /* ─── Topic Cards ─────────────────────────────────────────── */
+    .topic-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .topic-card {
+      background: var(--ws-white);
+      border: 1px solid var(--ws-gray);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+    .topic-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+
+    .topic-card-header {
+      padding: 20px 24px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.15s;
+    }
+    .topic-card.open .topic-card-header {
+      border-bottom-color: var(--ws-gray);
+    }
+    .topic-card-title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .topic-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--ws-gray-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .topic-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ws-black);
+    }
+    .topic-card-subtitle {
+      font-size: 12px;
+      color: #888;
+      margin-top: 2px;
+    }
+    .topic-chevron { flex-shrink: 0; transition: transform 0.25s; color: #999; }
+    .topic-card.open .topic-chevron { transform: rotate(180deg); }
+
+    .topic-card-body {
+      display: none;
+      padding: 24px;
+    }
+    .topic-card.open .topic-card-body { display: block; }
+
+    .concept-text {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .concept-text + .concept-text { margin-top: -8px; }
+
+    /* ─── Code Blocks ─────────────────────────────────────────── */
+    .code-block {
+      background: #1a1a2e;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin: 16px 0;
+      overflow-x: auto;
+    }
+    .code-block pre {
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      line-height: 1.7;
+      color: #e8e8f0;
+      margin: 0;
+    }
+    .code-block .cm { color: #6b8cba; font-style: italic; }   /* comment */
+    .code-block .kw { color: #c792ea; }                         /* keyword */
+    .code-block .fn { color: #82aaff; }                         /* function */
+    .code-block .st { color: #c3e88d; }                         /* string */
+    .code-block .nm { color: #f78c6c; }                         /* number */
+    .code-block .op { color: #89ddff; }                         /* operator */
+    .code-block .va { color: #eeffff; }                         /* variable */
+
+    /* ─── Scenario Callout ────────────────────────────────────── */
+    .scenario {
+      background: var(--ws-lavender);
+      border-left: 4px solid var(--ws-purple);
+      border-radius: 0 10px 10px 0;
+      padding: 16px 20px;
+      margin-top: 20px;
+    }
+    .scenario-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ws-purple);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .scenario p {
+      font-size: 14px;
+      line-height: 1.65;
+      color: #2a2a3a;
+    }
+
+    /* ─── Module Progress Footer ──────────────────────────────── */
+    .module-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--ws-gray);
+    }
+    .module-complete-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--ws-black);
+      color: var(--ws-white);
+      border: none;
+      border-radius: 9999px;
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: background 0.15s, transform 0.1s;
+    }
+    .module-complete-btn:hover { background: var(--ws-orange); transform: translateY(-1px); }
+    .module-complete-btn.done { background: var(--ws-green); }
+    .module-topic-count {
+      font-size: 13px;
+      color: #888;
+    }
+
+    /* ─── Footer ──────────────────────────────────────────────── */
+    .page-footer {
+      background: var(--ws-black);
+      color: var(--ws-white);
+      padding: 48px 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-brand {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .footer-brand span { color: var(--ws-orange); }
+    .footer-note {
+      font-size: 13px;
+      opacity: 0.5;
+    }
+
+    /* ─── Focus Styles ────────────────────────────────────────── */
+    :focus-visible {
+      outline: 2px solid var(--ws-orange);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    /* ─── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .hero { padding: 48px 32px; }
+      .hero h1 { font-size: 36px; }
+      .module-header { padding: 32px; }
+      .module-body { padding: 24px 32px 40px; }
+      .progress-bar-container { padding: 16px 32px; }
+    }
+    @media (max-width: 600px) {
+      .top-nav-links { display: none; }
+      .hero-meta { gap: 20px; flex-wrap: wrap; }
+      .module-header { padding: 24px; }
+      .module-body { padding: 20px 24px 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── Top Nav ─────────────────────────────────────────────── -->
+<nav class="top-nav" role="navigation" aria-label="Course navigation">
+  <a class="top-nav-logo" href="#">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+      <rect width="28" height="28" rx="6" fill="#FF4821"/>
+      <path d="M7 9h14M7 14h10M7 19h12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span class="top-nav-logo-text">Work<span>suite</span></span>
+  </a>
+  <div class="top-nav-divider" aria-hidden="true"></div>
+  <span class="top-nav-course">Python Fundamentals</span>
+  <div class="top-nav-links" role="list">
+    <a href="#mod-1" class="nav-pill" data-mod="1" role="listitem">01 Intro</a>
+    <a href="#mod-2" class="nav-pill" data-mod="2" role="listitem">02 Basics</a>
+    <a href="#mod-3" class="nav-pill" data-mod="3" role="listitem">03 Functions</a>
+    <a href="#mod-4" class="nav-pill" data-mod="4" role="listitem">04 Data Structures</a>
+    <a href="#mod-5" class="nav-pill" data-mod="5" role="listitem">05 Errors</a>
+    <a href="#mod-6" class="nav-pill" data-mod="6" role="listitem">06 Testing</a>
+  </div>
+</nav>
+
+<!-- ─── Hero ────────────────────────────────────────────────── -->
+<header class="hero" role="banner">
+  <p class="hero-eyebrow">Worksuite — Internal Study Guide</p>
+  <h1>Python Programming Fundamentals</h1>
+  <p>The Reader's Digest version. Every concept, every example — grounded in real Worksuite workflows. No walkthroughs required.</p>
+  <div class="hero-meta" aria-label="Course stats">
+    <div class="hero-stat">
+      <span class="hero-stat-value">6</span>
+      <span class="hero-stat-label">Modules</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-value">30+</span>
+      <span class="hero-stat-label">Concepts</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-value">Beginner</span>
+      <span class="hero-stat-label">Level</span>
+    </div>
+  </div>
+</header>
+
+<!-- ─── Progress ────────────────────────────────────────────── -->
+<div class="progress-bar-container" role="region" aria-label="Course progress">
+  <span class="progress-label">Progress</span>
+  <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="6" aria-label="Modules completed">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+  <span class="progress-count" id="progressCount">0 of 6 modules</span>
+</div>
+
+<!-- ─── Body ─────────────────────────────────────────────────── -->
+<div class="page-body">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" role="complementary" aria-label="Module list">
+    <p class="sidebar-section-label">Modules</p>
+    <a href="#mod-1" class="sidebar-link" data-sidebar="1">
+      <span class="mod-num">1</span> Intro to Python
+    </a>
+    <a href="#mod-2" class="sidebar-link" data-sidebar="2">
+      <span class="mod-num">2</span> Python Basics
+    </a>
+    <a href="#mod-3" class="sidebar-link" data-sidebar="3">
+      <span class="mod-num">3</span> Functions &amp; Modules
+    </a>
+    <a href="#mod-4" class="sidebar-link" data-sidebar="4">
+      <span class="mod-num">4</span> Data Structures
+    </a>
+    <a href="#mod-5" class="sidebar-link" data-sidebar="5">
+      <span class="mod-num">5</span> Error Handling
+    </a>
+    <a href="#mod-6" class="sidebar-link" data-sidebar="6">
+      <span class="mod-num">6</span> Testing &amp; Version Control
+    </a>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content" role="main">
+
+    <!-- ═══ MODULE 1 ══════════════════════════════════════════ -->
+    <section class="module-section mod-1" id="mod-1" aria-labelledby="mod-1-title">
+      <div class="module-header" role="button" tabindex="0" aria-expanded="false" aria-controls="mod-1-body">
+        <div class="module-header-left">
+          <p class="module-eyebrow">Module 01</p>
+          <h2 id="mod-1-title">Introduction to Python</h2>
+          <p>What Python is, why it matters, and how to start writing it. The foundation everything else builds on.</p>
+        </div>
+        <button class="module-toggle-btn" aria-hidden="true" tabindex="-1">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="module-body" id="mod-1-body">
+        <div class="topic-grid">
+
+          <!-- Topic: What is Python -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="#5032A0" stroke-width="1.5"/><path d="M9 5v4l3 2" stroke="#5032A0" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">What is Python?</div>
+                  <div class="topic-card-subtitle">Language overview &amp; use cases</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text">Python is a high-level, interpreted language with readable, English-like syntax. It's used across web development, data science, machine learning, and automation — and for platform work, automation is where it earns its keep most quickly. Repetitive tasks like pulling contract data, validating onboarding records, or hitting APIs don't need to be manual.</p>
+              <p class="concept-text">Python is "interpreted," meaning it runs line by line — you don't compile it first. That makes it fast to experiment with and easy to debug.</p>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p>A client onboards 200 contractors at once. Instead of manually reviewing each record, a Python script processes every row of the import file, validates required fields against Worksuite's schema, and flags incomplete ones — missing tax forms, unsigned agreements, blank payment details.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Topic: Variables -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="5" width="14" height="8" rx="2" stroke="#FF4821" stroke-width="1.5"/><path d="M6 9h6M9 7v4" stroke="#FF4821" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">Variables &amp; Data Types</div>
+                  <div class="topic-card-subtitle">Storing and working with data</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text">Variables are named containers for data your script needs to reference. Data types determine what you can do with a value. Python's core types: <strong>str</strong> (text), <strong>int</strong> (whole numbers), <strong>float</strong> (decimals), <strong>bool</strong> (True/False).</p>
+              <div class="code-block">
+                <pre><span class="cm"># Storing client info at the top of a script</span>
+<span class="va">client_name</span>    <span class="op">=</span> <span class="st">"Meridian Health"</span>
+<span class="va">contract_type</span>  <span class="op">=</span> <span class="st">"SOW"</span>
+<span class="va">headcount</span>      <span class="op">=</span> <span class="nm">340</span>       <span class="cm"># int, not "340" — math will break otherwise</span>
+<span class="va">is_enterprise</span>  <span class="op">=</span> <span class="kw">True</span></pre>
+              </div>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p>When automating a contractor onboarding workflow, storing <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">client_name = "Meridian Health"</code> at the top of your script means every downstream action — the welcome email, compliance checklist, system record — pulls from the same source without hardcoding the name in 12 different places.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Topic: print() and Jupyter -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="3" width="14" height="12" rx="2" stroke="#006032" stroke-width="1.5"/><path d="M5 8h8M5 11h5" stroke="#006032" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">print() &amp; Jupyter Notebooks</div>
+                  <div class="topic-card-subtitle">Output, feedback &amp; your workspace</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text"><strong>print()</strong> is your live feedback mechanism — it outputs text, variable values, or messages to the screen while your script runs. Jupyter Notebooks let you run code in chunks and see results immediately, which is ideal for exploratory analysis.</p>
+              <div class="code-block">
+                <pre><span class="fn">print</span>(<span class="st">f"Processing </span><span class="va">{contractor_name}</span><span class="st">..."</span>)
+<span class="fn">print</span>(<span class="st">f"Rate: $</span><span class="va">{rate}</span><span class="st"> | Status: </span><span class="va">{status}</span><span class="st">"</span>)</pre>
+              </div>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p>When running a script to bulk-update contractor compliance statuses in Worksuite, print statements tell you exactly where the script is — and exactly where it stopped if something goes wrong. Jupyter is ideal for digging into a client's onboarding completion rate before a quarterly business review.</p>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /topic-grid -->
+
+        <div class="module-footer">
+          <span class="module-topic-count">3 topics</span>
+          <button class="module-complete-btn" data-complete="1">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Mark Complete
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ MODULE 2 ══════════════════════════════════════════ -->
+    <section class="module-section mod-2" id="mod-2" aria-labelledby="mod-2-title">
+      <div class="module-header" role="button" tabindex="0" aria-expanded="false" aria-controls="mod-2-body">
+        <div class="module-header-left">
+          <p class="module-eyebrow">Module 02</p>
+          <h2 id="mod-2-title">Python Basics</h2>
+          <p>Conditionals, loops, and lists — the three tools you'll use in virtually every script you write.</p>
+        </div>
+        <button class="module-toggle-btn" aria-hidden="true" tabindex="-1">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="module-body" id="mod-2-body">
+        <div class="topic-grid">
+
+          <!-- Conditionals -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3v5M6 6l3-3 3 3M5 13h8M5 16h8" stroke="#761900" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">Conditionals</div>
+                  <div class="topic-card-subtitle">if / elif / else</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text">Conditionals branch your logic based on rules. Python uses <strong>if</strong>, <strong>elif</strong> (else-if), and <strong>else</strong> to evaluate conditions in order — the first one that's True runs, the rest are skipped.</p>
+              <div class="code-block">
+                <pre><span class="kw">if</span> <span class="va">days_until_expiry</span> <span class="op">&lt;=</span> <span class="nm">30</span><span class="op">:</span>
+    <span class="va">status</span> <span class="op">=</span> <span class="st">"Urgent — renewal required"</span>
+<span class="kw">elif</span> <span class="va">days_until_expiry</span> <span class="op">&lt;=</span> <span class="nm">90</span><span class="op">:</span>
+    <span class="va">status</span> <span class="op">=</span> <span class="st">"Upcoming — begin renewal process"</span>
+<span class="kw">else</span><span class="op">:</span>
+    <span class="va">status</span> <span class="op">=</span> <span class="st">"Active"</span></pre>
+              </div>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p>Every contractor contract in Worksuite gets a status without you reviewing each one manually. One block of logic handles the entire workforce roster in a single pass.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- For Loops -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 9a5 5 0 1 0 5-5" stroke="#761900" stroke-width="1.5" stroke-linecap="round"/><path d="M9 2L7 4l2 2" stroke="#761900" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">For Loops</div>
+                  <div class="topic-card-subtitle">Iterating over a collection</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text">A <strong>for loop</strong> runs a block of code once for every item in a sequence. It's the go-to tool for processing a list of records, files, or API responses without repeating yourself.</p>
+              <div class="code-block">
+                <pre><span class="kw">for</span> <span class="va">contractor</span> <span class="kw">in</span> <span class="va">import_file</span><span class="op">:</span>
+    <span class="kw">if</span> <span class="st">"tax_form"</span> <span class="kw">not in</span> <span class="va">contractor</span><span class="op">:</span>
+        <span class="va">flagged</span><span class="op">.</span><span class="fn">append</span>(<span class="va">contractor</span>[<span class="st">"name"</span>])
+    <span class="kw">if</span> <span class="st">"payment_details"</span> <span class="kw">not in</span> <span class="va">contractor</span><span class="op">:</span>
+        <span class="va">incomplete</span><span class="op">.</span><span class="fn">append</span>(<span class="va">contractor</span>[<span class="st">"name"</span>])</pre>
+              </div>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p>When an enterprise client onboards 200 contractors at once, a for loop iterates through every row of the import file, validates each record against Worksuite's required fields, and flags incomplete ones — instead of anyone reviewing 200 rows by hand.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- While Loops -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="3" width="12" height="12" rx="2" stroke="#761900" stroke-width="1.5"/><path d="M7 9h4" stroke="#761900" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">While Loops</div>
+                  <div class="topic-card-subtitle">Repeating until a condition changes</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text">A <strong>while loop</strong> keeps running as long as a condition is True. Use it when you don't know in advance how many times you'll need to repeat — like polling a status until it changes. Always make sure the condition will eventually become False, or the loop runs forever.</p>
+              <div class="code-block">
+                <pre><span class="kw">while</span> <span class="va">payment_status</span> <span class="op">!=</span> <span class="st">"cleared"</span><span class="op">:</span>
+    <span class="va">payment_status</span> <span class="op">=</span> <span class="fn">check_batch_status</span>(<span class="va">batch_id</span>)
+    <span class="fn">time</span><span class="op">.</span><span class="fn">sleep</span>(<span class="nm">30</span>)
+<span class="fn">notify_team</span>(<span class="st">"Batch payment cleared"</span>)</pre>
+              </div>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p>When polling Worksuite's API to confirm a bulk payment batch has cleared, a while loop checks every 30 seconds and only stops — then fires a confirmation notification — once it returns a successful status.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lists -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 5h12M3 9h12M3 13h8" stroke="#761900" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">Lists</div>
+                  <div class="topic-card-subtitle">Ordered, mutable collections</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text">Lists store ordered collections of items that can grow, shrink, and change. Items are accessed by index (starting at 0). Key methods: <strong>append()</strong> adds to the end, <strong>remove()</strong> deletes by value, <strong>len()</strong> gives the count, and slicing (<code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">list[1:3]</code>) extracts a range.</p>
+              <div class="code-block">
+                <pre><span class="va">pending_approvals</span> <span class="op">=</span> [<span class="st">"CTR-801"</span>, <span class="st">"CTR-802"</span>, <span class="st">"CTR-803"</span>]
+
+<span class="va">pending_approvals</span><span class="op">.</span><span class="fn">append</span>(<span class="st">"CTR-884"</span>)   <span class="cm"># new contract in</span>
+<span class="va">pending_approvals</span><span class="op">.</span><span class="fn">remove</span>(<span class="st">"CTR-801"</span>)   <span class="cm"># approved, out</span>
+<span class="fn">len</span>(<span class="va">pending_approvals</span>)                  <span class="cm"># 3 — current queue</span></pre>
+              </div>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p>Open contractor approvals, pending compliance documents, flagged invoices — any queue that grows and shrinks over time lives naturally in a list. The length of the list is your real-time backlog count.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="module-footer">
+          <span class="module-topic-count">4 topics</span>
+          <button class="module-complete-btn" data-complete="2">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Mark Complete
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ MODULE 3 ══════════════════════════════════════════ -->
+    <section class="module-section mod-3" id="mod-3" aria-labelledby="mod-3-title">
+      <div class="module-header" role="button" tabindex="0" aria-expanded="false" aria-controls="mod-3-body">
+        <div class="module-header-left">
+          <p class="module-eyebrow">Module 03</p>
+          <h2 id="mod-3-title">Functions &amp; Modules</h2>
+          <p>How to write reusable code, organize it into logical blocks, and extend Python with external libraries.</p>
+        </div>
+        <button class="module-toggle-btn" aria-hidden="true" tabindex="-1">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="module-body" id="mod-3-body">
+        <div class="topic-grid">
+
+          <!-- Functions -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 4h4v4H4zM10 4h4v4h-4zM7 10h4v4H7z" stroke="#5032A0" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">Functions</div>
+                  <div class="topic-card-subtitle">Reusable blocks of logic (DRY principle)</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text">Functions are reusable blocks of code. Define once, call as many times as needed — this is the DRY principle (Don't Repeat Yourself). They take <strong>parameters</strong> as inputs and use <strong>return</strong> to send output back. Variables defined inside a function are local — they don't exist or interfere outside of it (scope).</p>
+              <div class="code-block">
+                <pre><span class="kw">def</span> <span class="fn">utilization_rate</span>(<span class="va">active_contractors</span>, <span class="va">total_seats</span>)<span class="op">:</span>
+    <span class="kw">return</span> <span class="fn">round</span>((<span class="va">active_contractors</span> <span class="op">/</span> <span class="va">total_seats</span>) <span class="op">*</span> <span class="nm">100</span>, <span class="nm">1</span>)
+
+<span class="cm"># Use it anywhere — onboarding reports, QBR decks, dashboards</span>
+<span class="fn">utilization_rate</span>(<span class="nm">178</span>, <span class="nm">200</span>)  <span class="cm"># returns 89.0</span></pre>
+              </div>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p>When Worksuite changes how "active" is defined — say, to exclude contractors in offboarding status — you update one function, and every report that calls it is instantly correct. Without functions, you'd be hunting down the calculation across every script individually.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Classes -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="3" width="12" height="5" rx="1.5" stroke="#5032A0" stroke-width="1.5"/><rect x="3" y="10" width="5" height="5" rx="1.5" stroke="#5032A0" stroke-width="1.5"/><rect x="10" y="10" width="5" height="5" rx="1.5" stroke="#5032A0" stroke-width="1.5"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">Classes</div>
+                  <div class="topic-card-subtitle">Blueprints for objects</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text">Classes bundle data (attributes) and behavior (methods) into one structure. You define the blueprint once, then create as many instances as you need. <strong>__init__</strong> is the constructor — it runs whenever you create a new instance.</p>
+              <div class="code-block">
+                <pre><span class="kw">class</span> <span class="fn">WorksuiteContractor</span><span class="op">:</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="va">self</span>, <span class="va">name</span>, <span class="va">rate</span>, <span class="va">end_date</span>)<span class="op">:</span>
+        <span class="va">self</span><span class="op">.</span><span class="va">name</span>     <span class="op">=</span> <span class="va">name</span>
+        <span class="va">self</span><span class="op">.</span><span class="va">rate</span>     <span class="op">=</span> <span class="va">rate</span>
+        <span class="va">self</span><span class="op">.</span><span class="va">end_date</span> <span class="op">=</span> <span class="va">end_date</span>
+
+    <span class="kw">def</span> <span class="fn">days_until_expiry</span>(<span class="va">self</span>)<span class="op">:</span>
+        <span class="kw">return</span> (<span class="va">self</span><span class="op">.</span><span class="va">end_date</span> <span class="op">-</span> <span class="fn">date</span><span class="op">.</span><span class="fn">today</span>())<span class="op">.</span><span class="va">days</span>
+
+<span class="va">c</span> <span class="op">=</span> <span class="fn">WorksuiteContractor</span>(<span class="st">"Priya Nair"</span>, <span class="nm">125.00</span>, <span class="va">end_date</span>)
+<span class="va">c</span><span class="op">.</span><span class="fn">days_until_expiry</span>()  <span class="cm"># e.g. 42</span></pre>
+              </div>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p>Every contractor becomes an instance of the class — consistent structure across the entire engagement. Methods like <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">is_compliant()</code> or <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">generate_invoice()</code> live right alongside the data they need.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Built-ins & Libraries -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 15V6l6-3 6 3v9" stroke="#5032A0" stroke-width="1.5" stroke-linejoin="round"/><rect x="6" y="9" width="6" height="6" stroke="#5032A0" stroke-width="1.5"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">Built-ins &amp; External Libraries</div>
+                  <div class="topic-card-subtitle">Python's toolbox, plus the community's</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text"><strong>Built-in functions</strong> are always available — no imports. Common ones: <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">len()</code>, <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">sorted()</code>, <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">max()</code>, <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">min()</code>, <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">sum()</code>, <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">type()</code>. <strong>External libraries</strong> are installed via pip and massively extend what Python can do. <strong>Modules</strong> are Python files you import to add functionality.</p>
+              <div class="code-block">
+                <pre><span class="cm"># Built-ins — no import needed</span>
+<span class="fn">sorted</span>(<span class="va">invoices</span>, <span class="va">key</span><span class="op">=</span><span class="kw">lambda</span> <span class="va">i</span><span class="op">:</span> <span class="va">i</span>[<span class="st">"amount"</span>])
+<span class="fn">max</span>(<span class="va">contract_values</span>)
+
+<span class="cm"># External libraries — install with: pip install pandas</span>
+<span class="kw">import</span> <span class="va">pandas</span> <span class="kw">as</span> <span class="va">pd</span>
+<span class="kw">import</span> <span class="va">requests</span>
+
+<span class="va">df</span> <span class="op">=</span> <span class="va">pd</span><span class="op">.</span><span class="fn">read_csv</span>(<span class="st">"contractor_export.csv"</span>)
+<span class="va">missing</span> <span class="op">=</span> <span class="va">df</span>[<span class="va">df</span>[<span class="st">"tax_form"</span>]<span class="op">.</span><span class="fn">isna</span>()]</pre>
+              </div>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p><code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">pandas</code> loads a client's 5,000-row contractor export, filters for workers with missing compliance documents, and produces a clean exceptions report in a few lines. <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">requests</code> lets you hit Worksuite's API directly — pulling real-time contract statuses or triggering workflows programmatically.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="module-footer">
+          <span class="module-topic-count">3 topics</span>
+          <button class="module-complete-btn" data-complete="3">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Mark Complete
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ MODULE 4 ══════════════════════════════════════════ -->
+    <section class="module-section mod-4" id="mod-4" aria-labelledby="mod-4-title">
+      <div class="module-header" role="button" tabindex="0" aria-expanded="false" aria-controls="mod-4-body">
+        <div class="module-header-left">
+          <p class="module-eyebrow">Module 04</p>
+          <h2 id="mod-4-title">Data Structures</h2>
+          <p>Dictionaries, sets, and tuples — the right container for the right job. Plus sorting and searching at scale.</p>
+        </div>
+        <button class="module-toggle-btn" aria-hidden="true" tabindex="-1">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="module-body" id="mod-4-body">
+        <div class="topic-grid">
+
+          <!-- Dicts -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 5h4v3H3zM3 10h4v3H3zM9 5h6M9 8h4M9 10h6M9 13h4" stroke="#555" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">Dictionaries</div>
+                  <div class="topic-card-subtitle">Key-value pairs for structured records</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text">Dictionaries store data as <strong>key: value</strong> pairs. Look up values by key — fast, readable, and flexible. Keys must be unique. You can add new keys, update values, or delete entries at any time.</p>
+              <div class="code-block">
+                <pre><span class="va">contractor</span> <span class="op">=</span> {
+    <span class="st">"name"</span><span class="op">:</span>               <span class="st">"Priya Nair"</span>,
+    <span class="st">"type"</span><span class="op">:</span>               <span class="st">"Independent"</span>,
+    <span class="st">"rate"</span><span class="op">:</span>               <span class="nm">125.00</span>,
+    <span class="st">"compliance_status"</span><span class="op">:</span>  <span class="st">"Pending"</span>,
+    <span class="st">"contract_end"</span><span class="op">:</span>       <span class="st">"2026-06-30"</span>
+}
+
+<span class="va">contractor</span>[<span class="st">"compliance_status"</span>]          <span class="cm"># "Pending"</span>
+<span class="va">contractor</span>[<span class="st">"rate"</span>] <span class="op">=</span> <span class="nm">135.00</span>             <span class="cm"># update rate</span>
+<span class="va">contractor</span><span class="op">.</span><span class="fn">get</span>(<span class="st">"tax_id"</span>, <span class="st">"Not provided"</span>)  <span class="cm"># safe lookup</span></pre>
+              </div>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p>Each contractor in a processing script becomes a dictionary. You look up <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">contractor["compliance_status"]</code> to decide whether to trigger an alert, or update the rate after an adjustment — without touching anything else in the record.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sets & Tuples -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="7" cy="9" r="5" stroke="#555" stroke-width="1.5"/><circle cx="11" cy="9" r="5" stroke="#555" stroke-width="1.5"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">Sets &amp; Tuples</div>
+                  <div class="topic-card-subtitle">Uniqueness and immutability</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text"><strong>Sets</strong> are unordered collections with no duplicates — ideal for deduplication and membership checks. <strong>Tuples</strong> are like lists but immutable (can't be changed after creation) — use them for data that should never change mid-script.</p>
+              <div class="code-block">
+                <pre><span class="cm"># Sets — dedup contractor IDs from two sources</span>
+<span class="va">gaps</span> <span class="op">=</span> <span class="fn">set</span>(<span class="va">worksuite_ids</span>) <span class="op">-</span> <span class="fn">set</span>(<span class="va">payroll_ids</span>)
+<span class="cm"># gaps = contractors in Worksuite missing from payroll</span>
+
+<span class="cm"># Tuples — fixed reference data</span>
+<span class="va">api_config</span> <span class="op">=</span> (<span class="st">"https://api.worksuite.com"</span>, <span class="st">"v2"</span>, <span class="va">account_id</span>)
+<span class="cm"># Nothing in the script can accidentally overwrite this</span></pre>
+              </div>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p>Pulling contractor IDs from Worksuite and comparing them to a client's payroll system — one set subtraction instantly returns every worker missing from payroll, with no duplicate noise. Contractor permissions stored as a set make it structurally impossible for the same permission to appear twice.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sorting & Searching -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 5h12M5 9h8M7 13h4" stroke="#555" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">Sorting &amp; Searching</div>
+                  <div class="topic-card-subtitle">Efficiency at scale</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text"><strong>sorted()</strong> returns a new sorted list; <strong>.sort()</strong> sorts in place. Linear search scans every item — fine for small lists, slow at scale. Binary search on a sorted list is dramatically faster (O(log n) vs O(n)), which matters when processing thousands of contractor records.</p>
+              <div class="code-block">
+                <pre><span class="cm"># Sort contractors by health score, worst first</span>
+<span class="va">at_risk</span> <span class="op">=</span> <span class="fn">sorted</span>(<span class="va">clients</span>, <span class="va">key</span><span class="op">=</span><span class="kw">lambda</span> <span class="va">c</span><span class="op">:</span> <span class="va">c</span>[<span class="st">"health_score"</span>])
+
+<span class="cm"># Sort invoices by amount, largest first</span>
+<span class="va">invoices</span><span class="op">.</span><span class="fn">sort</span>(<span class="va">key</span><span class="op">=</span><span class="kw">lambda</span> <span class="va">i</span><span class="op">:</span> <span class="va">i</span>[<span class="st">"amount"</span>], <span class="va">reverse</span><span class="op">=</span><span class="kw">True</span>)</pre>
+              </div>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p>Scanning through 50,000 Worksuite contractor records to find one by ID is slow. Binary search finds that record in a fraction of the time — the difference between a script that runs in two seconds and one that runs for twenty minutes.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="module-footer">
+          <span class="module-topic-count">3 topics</span>
+          <button class="module-complete-btn" data-complete="4">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Mark Complete
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ MODULE 5 ══════════════════════════════════════════ -->
+    <section class="module-section mod-5" id="mod-5" aria-labelledby="mod-5-title">
+      <div class="module-header" role="button" tabindex="0" aria-expanded="false" aria-controls="mod-5-body">
+        <div class="module-header-left">
+          <p class="module-eyebrow">Module 05</p>
+          <h2 id="mod-5-title">Error Handling &amp; Debugging</h2>
+          <p>Exceptions, try-except blocks, and the debugging toolkit that keeps your scripts reliable when real data shows up.</p>
+        </div>
+        <button class="module-toggle-btn" aria-hidden="true" tabindex="-1">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 6l5 5 5-5" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="module-body" id="mod-5-body">
+        <div class="topic-grid">
+
+          <!-- Common Exceptions -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3l7 12H2L9 3z" stroke="#FF4821" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 8v4M9 13.5v.5" stroke="#FF4821" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">Common Exceptions</div>
+                  <div class="topic-card-subtitle">The errors you'll see most often</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text">Exceptions are Python's way of flagging that something went wrong. They crash your program unless you handle them. Knowing the common types lets you anticipate and prevent them.</p>
+              <div class="code-block">
+                <pre><span class="cm">NameError    </span><span class="op">—</span><span class="st"> used a variable before defining it</span>
+<span class="cm">TypeError    </span><span class="op">—</span><span class="st"> wrong type ("340" + 1 fails)</span>
+<span class="cm">KeyError     </span><span class="op">—</span><span class="st"> dict key doesn't exist</span>
+<span class="cm">IndexError   </span><span class="op">—</span><span class="st"> list index out of range</span>
+<span class="cm">ValueError   </span><span class="op">—</span><span class="st"> right type, wrong value (int("abc"))</span>
+<span class="cm">AttributeError</span><span class="op"> —</span><span class="st"> method doesn't exist on the object</span></pre>
+              </div>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p>Worksuite's API returns <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">days_until_renewal</code> as a string in some endpoints. When you try <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">days_until_renewal &lt; 30</code>, Python throws <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">TypeError</code>. Fix: <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">int(days_until_renewal) &lt; 30</code>.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Try-Except -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 4h10v10H4z" stroke="#5032A0" stroke-width="1.5" stroke-linejoin="round"/><path d="M7 9l2 2 4-4" stroke="#5032A0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">Try-Except Blocks</div>
+                  <div class="topic-card-subtitle">Graceful error handling</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text">Wrap risky code in a <strong>try</strong> block. If it fails, the <strong>except</strong> block catches it and lets you handle it gracefully. <strong>finally</strong> always runs — use it for cleanup. This is what separates a fragile script from a reliable one.</p>
+              <div class="code-block">
+                <pre><span class="kw">for</span> <span class="va">client</span> <span class="kw">in</span> <span class="va">client_exports</span><span class="op">:</span>
+    <span class="kw">try</span><span class="op">:</span>
+        <span class="fn">process_export</span>(<span class="va">client</span>[<span class="st">"file"</span>])
+    <span class="kw">except</span> <span class="va">KeyError</span> <span class="kw">as</span> <span class="va">e</span><span class="op">:</span>
+        <span class="fn">log_error</span>(<span class="va">client</span>[<span class="st">"name"</span>], <span class="st">f"Missing field: </span><span class="va">{e}</span><span class="st">"</span>)
+    <span class="kw">except</span> <span class="va">FileNotFoundError</span><span class="op">:</span>
+        <span class="fn">log_error</span>(<span class="va">client</span>[<span class="st">"name"</span>], <span class="st">"Export file not found"</span>)
+    <span class="kw">finally</span><span class="op">:</span>
+        <span class="fn">close_connection</span>()  <span class="cm"># always runs</span></pre>
+              </div>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p>A nightly script processes contract exports for 30 clients. One client uploads a malformed file. Without error handling, the script crashes at client 7 and the other 23 never run. With try-except, you catch the failure, log it, and keep processing — then send a summary of exceptions at the end.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Debugging -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="10" r="5" stroke="#555" stroke-width="1.5"/><path d="M9 5V3M6 6L4 4M12 6l2-2M5 10H3M15 10h-2" stroke="#555" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">Debugging Strategies</div>
+                  <div class="topic-card-subtitle">Finding bugs systematically</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text"><strong>Print debugging</strong> is the fastest first move — add print statements to inspect variable values at key points. <strong>The debugger</strong> lets you set breakpoints and step through code line by line. <strong>Read the traceback</strong> — it tells you the exact file, line number, and error type. Rubber duck debugging (explaining your code out loud) works surprisingly well for logic errors.</p>
+              <div class="code-block">
+                <pre><span class="cm"># Print debugging — inspect values at the key moment</span>
+<span class="fn">print</span>(<span class="st">f"rate: </span><span class="va">{rate}</span><span class="st">, hours: </span><span class="va">{hours}</span><span class="st">, total: </span><span class="va">{total}</span><span class="st">"</span>)
+
+<span class="cm"># Safe dict lookup — avoids KeyError crashes</span>
+<span class="va">tax_id</span> <span class="op">=</span> <span class="va">contractor</span><span class="op">.</span><span class="fn">get</span>(<span class="st">"tax_id"</span>, <span class="st">"Not provided"</span>)
+
+<span class="cm"># Check type when behavior is unexpected</span>
+<span class="fn">print</span>(<span class="fn">type</span>(<span class="va">days_until_renewal</span>))  <span class="cm"># str? int?</span></pre>
+              </div>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p>An invoice total calculation is producing wrong output for certain contractors. A single print line before the return statement immediately shows whether bad data is coming in or the formula itself has a bug. If the problem only appears on one of 200 records, a breakpoint and step-through will catch the exact moment a <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">None</code> slips in where a contract value was expected.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="module-footer">
+          <span class="module-topic-count">3 topics</span>
+          <button class="module-complete-btn" data-complete="5">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Mark Complete
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ MODULE 6 ══════════════════════════════════════════ -->
+    <section class="module-section mod-6" id="mod-6" aria-labelledby="mod-6-title">
+      <div class="module-header" role="button" tabindex="0" aria-expanded="false" aria-controls="mod-6-body">
+        <div class="module-header-left">
+          <p class="module-eyebrow">Module 06</p>
+          <h2 id="mod-6-title">Testing &amp; Version Control</h2>
+          <p>How to prove your code works, catch regressions before they matter, and never lose work again.</p>
+        </div>
+        <button class="module-toggle-btn" aria-hidden="true" tabindex="-1">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 6l5 5 5-5" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="module-body" id="mod-6-body">
+        <div class="topic-grid">
+
+          <!-- Unit Testing -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M5 9l3 3 5-5" stroke="#006032" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="2" y="2" width="14" height="14" rx="3" stroke="#006032" stroke-width="1.5"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">Unit Testing with pytest</div>
+                  <div class="topic-card-subtitle">Proving individual functions work correctly</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text">Unit tests verify that individual functions produce correct output. <strong>pytest</strong> is the standard Python testing framework — write test functions that start with <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">test_</code>, use <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">assert</code> to check expected values, and run them all with <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">pytest</code> in the terminal. <strong>Fixtures</strong> set up reusable test data so you don't copy-paste the same setup into every test.</p>
+              <div class="code-block">
+                <pre><span class="kw">def</span> <span class="fn">test_utilization_rate</span>()<span class="op">:</span>
+    <span class="kw">assert</span> <span class="fn">utilization_rate</span>(<span class="nm">178</span>, <span class="nm">200</span>) <span class="op">==</span> <span class="nm">89.0</span>
+    <span class="kw">assert</span> <span class="fn">utilization_rate</span>(<span class="nm">0</span>, <span class="nm">200</span>)   <span class="op">==</span> <span class="nm">0.0</span>
+    <span class="kw">assert</span> <span class="fn">utilization_rate</span>(<span class="nm">200</span>, <span class="nm">200</span>) <span class="op">==</span> <span class="nm">100.0</span>
+
+<span class="cm"># Fixture — reusable test contractor</span>
+<span class="op">@</span><span class="fn">pytest.fixture</span>
+<span class="kw">def</span> <span class="fn">sample_contractor</span>()<span class="op">:</span>
+    <span class="kw">return</span> {<span class="st">"name"</span><span class="op">:</span> <span class="st">"Test User"</span>, <span class="st">"rate"</span><span class="op">:</span> <span class="nm">100.00</span>, <span class="st">"status"</span><span class="op">:</span> <span class="st">"Active"</span>}</pre>
+              </div>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p>A compliance scoring formula works perfectly. Three months later, a colleague updates the logic for a new contractor classification Worksuite just added. A test written on day one immediately flags that the updated formula returns incorrect scores for legacy contract types — a bug that would have silently corrupted compliance reporting if it reached production.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Git -->
+          <div class="topic-card">
+            <div class="topic-card-header" role="button" tabindex="0">
+              <div class="topic-card-title-row">
+                <div class="topic-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="5" cy="5" r="2" stroke="#555" stroke-width="1.5"/><circle cx="13" cy="5" r="2" stroke="#555" stroke-width="1.5"/><circle cx="9" cy="13" r="2" stroke="#555" stroke-width="1.5"/><path d="M7 5h4M5 7v4M13 7v2" stroke="#555" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="topic-card-title">Git &amp; Version Control</div>
+                  <div class="topic-card-subtitle">Checkpoints, branches, and collaboration</div>
+                </div>
+              </div>
+              <svg class="topic-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="topic-card-body">
+              <p class="concept-text">Git tracks every change you make to code so you can revert mistakes, see history, and collaborate without overwriting each other. <strong>Commits</strong> are save points. <strong>Branches</strong> let you build features in isolation without affecting working code. <strong>GitHub</strong> hosts repositories in the cloud and adds pull requests and code review on top.</p>
+              <div class="code-block">
+                <pre><span class="va">git init</span>               <span class="cm"># start tracking</span>
+<span class="va">git add</span> <span class="st">filename.py</span>    <span class="cm"># stage specific file</span>
+<span class="va">git commit</span> <span class="st">-m "msg"</span>   <span class="cm"># save snapshot</span>
+<span class="va">git log</span>                <span class="cm"># see full history</span>
+<span class="va">git diff</span>               <span class="cm"># see what changed</span>
+<span class="va">git checkout -b</span> <span class="st">name</span>  <span class="cm"># new branch</span>
+<span class="va">git merge</span> <span class="st">branchname</span>  <span class="cm"># merge changes in</span></pre>
+              </div>
+              <div class="scenario">
+                <div class="scenario-label">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
+                  Worksuite Scenario
+                </div>
+                <p>You're refactoring a contract health scoring script the whole team uses. Something breaks. <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">git log</code> shows every change since the last working version; <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">git diff</code> shows exactly what changed. Branches mean one person can add a new Worksuite API integration while another fixes a bug — neither blocks the other, and neither breaks what's in production.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="module-footer">
+          <span class="module-topic-count">2 topics</span>
+          <button class="module-complete-btn" data-complete="6">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Mark Complete
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ─── Footer ───────────────────────────────────────────────── -->
+<footer class="page-footer" role="contentinfo">
+  <div class="footer-brand">Work<span>suite</span></div>
+  <p class="footer-note">Python Programming Fundamentals — TAM Study Guide</p>
+</footer>
+
+<!-- ─── JavaScript ────────────────────────────────────────────── -->
+<script>
+  const completedModules = new Set();
+
+  // ── Module accordion toggle ──────────────────────────────────
+  document.querySelectorAll('.module-header').forEach(header => {
+    const toggle = () => {
+      const section = header.closest('.module-section');
+      const isOpen  = section.classList.contains('open');
+      section.classList.toggle('open', !isOpen);
+      header.setAttribute('aria-expanded', String(!isOpen));
+      updateSidebarActive();
+    };
+    header.addEventListener('click', toggle);
+    header.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+  });
+
+  // ── Topic card accordion toggle ──────────────────────────────
+  document.querySelectorAll('.topic-card-header').forEach(header => {
+    const toggle = () => {
+      const card = header.closest('.topic-card');
+      card.classList.toggle('open');
+    };
+    header.addEventListener('click', toggle);
+    header.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+  });
+
+  // ── Mark Complete ────────────────────────────────────────────
+  document.querySelectorAll('.module-complete-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const modNum = btn.dataset.complete;
+      if (completedModules.has(modNum)) return;
+      completedModules.add(modNum);
+      btn.classList.add('done');
+      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Completed`;
+      btn.disabled = true;
+      // update sidebar
+      const sidebarLink = document.querySelector(`.sidebar-link[data-sidebar="${modNum}"]`);
+      if (sidebarLink) sidebarLink.classList.add('done');
+      updateProgress();
+    });
+  });
+
+  // ── Progress bar ─────────────────────────────────────────────
+  function updateProgress() {
+    const count = completedModules.size;
+    const fill  = document.getElementById('progressFill');
+    const label = document.getElementById('progressCount');
+    fill.style.width = `${(count / 6) * 100}%`;
+    fill.closest('[role="progressbar"]').setAttribute('aria-valuenow', count);
+    label.textContent = `${count} of 6 modules`;
+  }
+
+  // ── Sidebar active state on scroll ──────────────────────────
+  const sections = document.querySelectorAll('.module-section');
+  const sidebarLinks = document.querySelectorAll('.sidebar-link');
+  const navPills = document.querySelectorAll('.nav-pill');
+
+  function updateSidebarActive() {
+    let currentId = '';
+    sections.forEach(sec => {
+      const rect = sec.getBoundingClientRect();
+      if (rect.top <= 120) currentId = sec.id;
+    });
+    sidebarLinks.forEach(link => {
+      const mod = link.dataset.sidebar;
+      link.classList.toggle('active', `mod-${mod}` === currentId);
+    });
+    navPills.forEach(pill => {
+      const mod = pill.dataset.mod;
+      pill.classList.toggle('active', `mod-${mod}` === currentId);
+    });
+  }
+
+  window.addEventListener('scroll', updateSidebarActive, { passive: true });
+  updateSidebarActive();
+
+  // ── Open module from nav click ───────────────────────────────
+  document.querySelectorAll('.nav-pill, .sidebar-link').forEach(link => {
+    link.addEventListener('click', e => {
+      const href = link.getAttribute('href');
+      if (!href || !href.startsWith('#')) return;
+      const target = document.querySelector(href);
+      if (target && !target.classList.contains('open')) {
+        target.classList.add('open');
+        const header = target.querySelector('.module-header');
+        if (header) header.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  // ── Open first module by default ────────────────────────────
+  const first = document.querySelector('#mod-1');
+  if (first) {
+    first.classList.add('open');
+    first.querySelector('.module-header').setAttribute('aria-expanded', 'true');
+  }
+</script>
+
+</body>
+</html>

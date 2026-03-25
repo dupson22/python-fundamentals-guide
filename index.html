@@ -689,10 +689,10 @@
             <div class="topic-card-body">
               <p class="concept-text">Variables are named containers for data your script needs to reference. Data types determine what you can do with a value. Python's core types: <strong>str</strong> (text), <strong>int</strong> (whole numbers), <strong>float</strong> (decimals), <strong>bool</strong> (True/False).</p>
               <div class="code-block">
-                <pre><span class="cm"># Storing client info at the top of a script</span>
-<span class="va">client_name</span>    <span class="op">=</span> <span class="st">"Meridian Health"</span>
-<span class="va">contract_type</span>  <span class="op">=</span> <span class="st">"SOW"</span>
-<span class="va">headcount</span>      <span class="op">=</span> <span class="nm">340</span>       <span class="cm"># int, not "340" — math will break otherwise</span>
+                <pre><span class="cm"># Fields from a Worksuite API response — same types, same names</span>
+<span class="va">tenant_slug</span>    <span class="op">=</span> <span class="st">"meridianhealth"</span>    <span class="cm"># identifies the tenant</span>
+<span class="va">work_type</span>      <span class="op">=</span> <span class="st">"SOW"</span>               <span class="cm"># from /rest/v1/worktypes/</span>
+<span class="va">headcount</span>      <span class="op">=</span> <span class="nm">340</span>                 <span class="cm"># int, not "340" — math will break otherwise</span>
 <span class="va">is_enterprise</span>  <span class="op">=</span> <span class="kw">True</span></pre>
               </div>
               <div class="scenario">
@@ -700,7 +700,7 @@
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
                   Worksuite Scenario
                 </div>
-                <p>When automating a contractor onboarding workflow, storing <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">client_name = "Meridian Health"</code> at the top of your script means every downstream action — the welcome email, compliance checklist, system record — pulls from the same source without hardcoding the name in 12 different places.</p>
+                <p>The Worksuite API returns <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">headcount</code> as a number and <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">is_enterprise</code> as a boolean. Storing them at the top of your script means every downstream action — compliance checks, report generation, API calls — pulls from the same source without hardcoding values across 12 different places.</p>
               </div>
             </div>
           </div>
@@ -722,15 +722,16 @@
             <div class="topic-card-body">
               <p class="concept-text"><strong>print()</strong> is your live feedback mechanism — it outputs text, variable values, or messages to the screen while your script runs. Jupyter Notebooks let you run code in chunks and see results immediately, which is ideal for exploratory analysis.</p>
               <div class="code-block">
-                <pre><span class="fn">print</span>(<span class="st">f"Processing </span><span class="va">{contractor_name}</span><span class="st">..."</span>)
-<span class="fn">print</span>(<span class="st">f"Rate: $</span><span class="va">{rate}</span><span class="st"> | Status: </span><span class="va">{status}</span><span class="st">"</span>)</pre>
+                <pre><span class="cm"># Fields come directly from the /rest/v1/partners/{id}/ response</span>
+<span class="fn">print</span>(<span class="st">f"Processing </span><span class="va">{partner['display_name']}</span><span class="st">..."</span>)
+<span class="fn">print</span>(<span class="st">f"Rate: $</span><span class="va">{partner['hourly_rate']}</span><span class="st"> | Status: </span><span class="va">{partner['status']}</span><span class="st">"</span>)</pre>
               </div>
               <div class="scenario">
                 <div class="scenario-label">
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
                   Worksuite Scenario
                 </div>
-                <p>When running a script to bulk-update contractor compliance statuses in Worksuite, print statements tell you exactly where the script is — and exactly where it stopped if something goes wrong. Jupyter is ideal for digging into a client's onboarding completion rate before a quarterly business review.</p>
+                <p>When running a script that loops through partners from <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">/rest/v1/partners/</code> to bulk-update compliance statuses, print statements tell you exactly where the script is — and exactly where it stopped if something goes wrong. Jupyter is ideal for digging into a client's onboarding completion rate before a quarterly business review.</p>
               </div>
             </div>
           </div>
@@ -813,11 +814,12 @@
             <div class="topic-card-body">
               <p class="concept-text">A <strong>for loop</strong> runs a block of code once for every item in a sequence. It's the go-to tool for processing a list of records, files, or API responses without repeating yourself.</p>
               <div class="code-block">
-                <pre><span class="kw">for</span> <span class="va">contractor</span> <span class="kw">in</span> <span class="va">import_file</span><span class="op">:</span>
-    <span class="kw">if</span> <span class="st">"tax_form"</span> <span class="kw">not in</span> <span class="va">contractor</span><span class="op">:</span>
-        <span class="va">flagged</span><span class="op">.</span><span class="fn">append</span>(<span class="va">contractor</span>[<span class="st">"name"</span>])
-    <span class="kw">if</span> <span class="st">"payment_details"</span> <span class="kw">not in</span> <span class="va">contractor</span><span class="op">:</span>
-        <span class="va">incomplete</span><span class="op">.</span><span class="fn">append</span>(<span class="va">contractor</span>[<span class="st">"name"</span>])</pre>
+                <pre><span class="cm"># /rest/v1/partners/ returns paginated results under "results" key</span>
+<span class="kw">for</span> <span class="va">partner</span> <span class="kw">in</span> <span class="va">response</span>[<span class="st">"results"</span>]<span class="op">:</span>
+    <span class="kw">if</span> <span class="kw">not</span> <span class="va">partner</span><span class="op">.</span><span class="fn">get</span>(<span class="st">"tax_form_on_file"</span>)<span class="op">:</span>
+        <span class="va">flagged</span><span class="op">.</span><span class="fn">append</span>(<span class="va">partner</span>[<span class="st">"display_name"</span>])
+    <span class="kw">if</span> <span class="kw">not</span> <span class="va">partner</span><span class="op">.</span><span class="fn">get</span>(<span class="st">"payment_account_linked"</span>)<span class="op">:</span>
+        <span class="va">incomplete</span><span class="op">.</span><span class="fn">append</span>(<span class="va">partner</span>[<span class="st">"display_name"</span>])</pre>
               </div>
               <div class="scenario">
                 <div class="scenario-label">
@@ -846,8 +848,10 @@
             <div class="topic-card-body">
               <p class="concept-text">A <strong>while loop</strong> keeps running as long as a condition is True. Use it when you don't know in advance how many times you'll need to repeat — like polling a status until it changes. Always make sure the condition will eventually become False, or the loop runs forever.</p>
               <div class="code-block">
-                <pre><span class="kw">while</span> <span class="va">payment_status</span> <span class="op">!=</span> <span class="st">"cleared"</span><span class="op">:</span>
-    <span class="va">payment_status</span> <span class="op">=</span> <span class="fn">check_batch_status</span>(<span class="va">batch_id</span>)
+                <pre><span class="cm"># Poll /rest/v2/payments/{id}/ until status transitions to "paid"</span>
+<span class="kw">while</span> <span class="va">payment</span>[<span class="st">"status"</span>] <span class="op">!=</span> <span class="st">"paid"</span><span class="op">:</span>
+    <span class="va">resp</span>    <span class="op">=</span> <span class="va">requests</span><span class="op">.</span><span class="fn">get</span>(<span class="st">f"</span><span class="va">{BASE_URL}</span><span class="st">/rest/v2/payments/</span><span class="va">{payment_id}</span><span class="st">/"</span>, <span class="va">headers</span><span class="op">=</span><span class="va">headers</span>)
+    <span class="va">payment</span> <span class="op">=</span> <span class="va">resp</span><span class="op">.</span><span class="fn">json</span>()
     <span class="fn">time</span><span class="op">.</span><span class="fn">sleep</span>(<span class="nm">30</span>)
 <span class="fn">notify_team</span>(<span class="st">"Batch payment cleared"</span>)</pre>
               </div>
@@ -970,17 +974,19 @@
             <div class="topic-card-body">
               <p class="concept-text">Classes bundle data (attributes) and behavior (methods) into one structure. You define the blueprint once, then create as many instances as you need. <strong>__init__</strong> is the constructor — it runs whenever you create a new instance.</p>
               <div class="code-block">
-                <pre><span class="kw">class</span> <span class="fn">WorksuiteContractor</span><span class="op">:</span>
-    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="va">self</span>, <span class="va">name</span>, <span class="va">rate</span>, <span class="va">end_date</span>)<span class="op">:</span>
-        <span class="va">self</span><span class="op">.</span><span class="va">name</span>     <span class="op">=</span> <span class="va">name</span>
-        <span class="va">self</span><span class="op">.</span><span class="va">rate</span>     <span class="op">=</span> <span class="va">rate</span>
-        <span class="va">self</span><span class="op">.</span><span class="va">end_date</span> <span class="op">=</span> <span class="va">end_date</span>
+                <pre><span class="cm"># Attribute names mirror the /rest/v1/partners/{id}/ response body</span>
+<span class="kw">class</span> <span class="fn">WorksuitePartner</span><span class="op">:</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="va">self</span>, <span class="va">partner_id</span>, <span class="va">display_name</span>, <span class="va">hourly_rate</span>, <span class="va">contract_end</span>)<span class="op">:</span>
+        <span class="va">self</span><span class="op">.</span><span class="va">id</span>           <span class="op">=</span> <span class="va">partner_id</span>
+        <span class="va">self</span><span class="op">.</span><span class="va">display_name</span> <span class="op">=</span> <span class="va">display_name</span>
+        <span class="va">self</span><span class="op">.</span><span class="va">hourly_rate</span>  <span class="op">=</span> <span class="va">hourly_rate</span>
+        <span class="va">self</span><span class="op">.</span><span class="va">contract_end</span> <span class="op">=</span> <span class="va">contract_end</span>
 
     <span class="kw">def</span> <span class="fn">days_until_expiry</span>(<span class="va">self</span>)<span class="op">:</span>
-        <span class="kw">return</span> (<span class="va">self</span><span class="op">.</span><span class="va">end_date</span> <span class="op">-</span> <span class="fn">date</span><span class="op">.</span><span class="fn">today</span>())<span class="op">.</span><span class="va">days</span>
+        <span class="kw">return</span> (<span class="va">self</span><span class="op">.</span><span class="va">contract_end</span> <span class="op">-</span> <span class="fn">date</span><span class="op">.</span><span class="fn">today</span>())<span class="op">.</span><span class="va">days</span>
 
-<span class="va">c</span> <span class="op">=</span> <span class="fn">WorksuiteContractor</span>(<span class="st">"Priya Nair"</span>, <span class="nm">125.00</span>, <span class="va">end_date</span>)
-<span class="va">c</span><span class="op">.</span><span class="fn">days_until_expiry</span>()  <span class="cm"># e.g. 42</span></pre>
+<span class="va">p</span> <span class="op">=</span> <span class="fn">WorksuitePartner</span>(<span class="st">"prt_a4k92x"</span>, <span class="st">"Priya Nair"</span>, <span class="nm">125.00</span>, <span class="va">contract_end</span>)
+<span class="va">p</span><span class="op">.</span><span class="fn">days_until_expiry</span>()  <span class="cm"># e.g. 42</span></pre>
               </div>
               <div class="scenario">
                 <div class="scenario-label">
@@ -1010,15 +1016,20 @@
               <p class="concept-text"><strong>Built-in functions</strong> are always available — no imports. Common ones: <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">len()</code>, <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">sorted()</code>, <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">max()</code>, <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">min()</code>, <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">sum()</code>, <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">type()</code>. <strong>External libraries</strong> are installed via pip and massively extend what Python can do. <strong>Modules</strong> are Python files you import to add functionality.</p>
               <div class="code-block">
                 <pre><span class="cm"># Built-ins — no import needed</span>
-<span class="fn">sorted</span>(<span class="va">invoices</span>, <span class="va">key</span><span class="op">=</span><span class="kw">lambda</span> <span class="va">i</span><span class="op">:</span> <span class="va">i</span>[<span class="st">"amount"</span>])
+<span class="fn">sorted</span>(<span class="va">payments</span>, <span class="va">key</span><span class="op">=</span><span class="kw">lambda</span> <span class="va">p</span><span class="op">:</span> <span class="va">p</span>[<span class="st">"amount"</span>])
 <span class="fn">max</span>(<span class="va">contract_values</span>)
 
-<span class="cm"># External libraries — install with: pip install pandas</span>
+<span class="cm"># External libraries — install with: pip install pandas requests</span>
 <span class="kw">import</span> <span class="va">pandas</span> <span class="kw">as</span> <span class="va">pd</span>
 <span class="kw">import</span> <span class="va">requests</span>
 
-<span class="va">df</span> <span class="op">=</span> <span class="va">pd</span><span class="op">.</span><span class="fn">read_csv</span>(<span class="st">"contractor_export.csv"</span>)
-<span class="va">missing</span> <span class="op">=</span> <span class="va">df</span>[<span class="va">df</span>[<span class="st">"tax_form"</span>]<span class="op">.</span><span class="fn">isna</span>()]</pre>
+<span class="cm"># Hit the Worksuite API directly — auth via Bearer token</span>
+<span class="va">resp</span>     <span class="op">=</span> <span class="va">requests</span><span class="op">.</span><span class="fn">get</span>(<span class="st">"https://api.worksuite.com/rest/v1/partners/"</span>,
+                        <span class="va">headers</span><span class="op">=</span>{<span class="st">"Authorization"</span><span class="op">:</span> <span class="st">f"Bearer </span><span class="va">{api_key}</span><span class="st">"</span>})
+<span class="va">partners</span> <span class="op">=</span> <span class="va">resp</span><span class="op">.</span><span class="fn">json</span>()[<span class="st">"results"</span>]
+<span class="cm"># Or load a Worksuite partner export CSV</span>
+<span class="va">df</span>      <span class="op">=</span> <span class="va">pd</span><span class="op">.</span><span class="fn">read_csv</span>(<span class="st">"worksuite_partner_export.csv"</span>)
+<span class="va">missing</span> <span class="op">=</span> <span class="va">df</span>[<span class="va">df</span>[<span class="st">"compliance_status"</span>]<span class="op">.</span><span class="fn">isna</span>()]</pre>
               </div>
               <div class="scenario">
                 <div class="scenario-label">
@@ -1073,17 +1084,19 @@
             <div class="topic-card-body">
               <p class="concept-text">Dictionaries store data as <strong>key: value</strong> pairs. Look up values by key — fast, readable, and flexible. Keys must be unique. You can add new keys, update values, or delete entries at any time.</p>
               <div class="code-block">
-                <pre><span class="va">contractor</span> <span class="op">=</span> {
-    <span class="st">"name"</span><span class="op">:</span>               <span class="st">"Priya Nair"</span>,
-    <span class="st">"type"</span><span class="op">:</span>               <span class="st">"Independent"</span>,
-    <span class="st">"rate"</span><span class="op">:</span>               <span class="nm">125.00</span>,
-    <span class="st">"compliance_status"</span><span class="op">:</span>  <span class="st">"Pending"</span>,
-    <span class="st">"contract_end"</span><span class="op">:</span>       <span class="st">"2026-06-30"</span>
+                <pre><span class="cm"># Shape mirrors a /rest/v1/partners/{id}/ response body</span>
+<span class="va">partner</span> <span class="op">=</span> {
+    <span class="st">"id"</span><span class="op">:</span>           <span class="st">"prt_a4k92x"</span>,
+    <span class="st">"display_name"</span><span class="op">:</span> <span class="st">"Priya Nair"</span>,
+    <span class="st">"work_type"</span><span class="op">:</span>    <span class="st">"Independent Contractor"</span>,
+    <span class="st">"hourly_rate"</span><span class="op">:</span>  <span class="nm">125.00</span>,
+    <span class="st">"status"</span><span class="op">:</span>       <span class="st">"pending_compliance"</span>,
+    <span class="st">"contract_end"</span><span class="op">:</span> <span class="st">"2026-06-30"</span>
 }
 
-<span class="va">contractor</span>[<span class="st">"compliance_status"</span>]          <span class="cm"># "Pending"</span>
-<span class="va">contractor</span>[<span class="st">"rate"</span>] <span class="op">=</span> <span class="nm">135.00</span>             <span class="cm"># update rate</span>
-<span class="va">contractor</span><span class="op">.</span><span class="fn">get</span>(<span class="st">"tax_id"</span>, <span class="st">"Not provided"</span>)  <span class="cm"># safe lookup</span></pre>
+<span class="va">partner</span>[<span class="st">"status"</span>]                          <span class="cm"># "pending_compliance"</span>
+<span class="va">partner</span>[<span class="st">"hourly_rate"</span>] <span class="op">=</span> <span class="nm">135.00</span>           <span class="cm"># update rate</span>
+<span class="va">partner</span><span class="op">.</span><span class="fn">get</span>(<span class="st">"notes"</span>, <span class="st">"none"</span>)              <span class="cm"># safe default</span></pre>
               </div>
               <div class="scenario">
                 <div class="scenario-label">
@@ -1112,12 +1125,12 @@
             <div class="topic-card-body">
               <p class="concept-text"><strong>Sets</strong> are unordered collections with no duplicates — ideal for deduplication and membership checks. <strong>Tuples</strong> are like lists but immutable (can't be changed after creation) — use them for data that should never change mid-script.</p>
               <div class="code-block">
-                <pre><span class="cm"># Sets — dedup contractor IDs from two sources</span>
-<span class="va">gaps</span> <span class="op">=</span> <span class="fn">set</span>(<span class="va">worksuite_ids</span>) <span class="op">-</span> <span class="fn">set</span>(<span class="va">payroll_ids</span>)
-<span class="cm"># gaps = contractors in Worksuite missing from payroll</span>
+                <pre><span class="cm"># Sets — dedup partner IDs from two sources</span>
+<span class="va">gaps</span> <span class="op">=</span> <span class="fn">set</span>(<span class="va">worksuite_partner_ids</span>) <span class="op">-</span> <span class="fn">set</span>(<span class="va">payroll_system_ids</span>)
+<span class="cm"># gaps = partners in Worksuite missing from payroll</span>
 
-<span class="cm"># Tuples — fixed reference data</span>
-<span class="va">api_config</span> <span class="op">=</span> (<span class="st">"https://api.worksuite.com"</span>, <span class="st">"v2"</span>, <span class="va">account_id</span>)
+<span class="cm"># Tuples — fixed API config</span>
+<span class="va">api_config</span> <span class="op">=</span> (<span class="st">"https://api.worksuite.com"</span>, <span class="st">"/rest/v2/"</span>, <span class="va">api_key</span>)
 <span class="cm"># Nothing in the script can accidentally overwrite this</span></pre>
               </div>
               <div class="scenario">
@@ -1147,11 +1160,11 @@
             <div class="topic-card-body">
               <p class="concept-text"><strong>sorted()</strong> returns a new sorted list; <strong>.sort()</strong> sorts in place. Linear search scans every item — fine for small lists, slow at scale. Binary search on a sorted list is dramatically faster (O(log n) vs O(n)), which matters when processing thousands of contractor records.</p>
               <div class="code-block">
-                <pre><span class="cm"># Sort contractors by health score, worst first</span>
-<span class="va">at_risk</span> <span class="op">=</span> <span class="fn">sorted</span>(<span class="va">clients</span>, <span class="va">key</span><span class="op">=</span><span class="kw">lambda</span> <span class="va">c</span><span class="op">:</span> <span class="va">c</span>[<span class="st">"health_score"</span>])
+                <pre><span class="cm"># Sort partners by health score, worst first</span>
+<span class="va">at_risk</span> <span class="op">=</span> <span class="fn">sorted</span>(<span class="va">partners</span>, <span class="va">key</span><span class="op">=</span><span class="kw">lambda</span> <span class="va">p</span><span class="op">:</span> <span class="va">p</span>[<span class="st">"health_score"</span>])
 
-<span class="cm"># Sort invoices by amount, largest first</span>
-<span class="va">invoices</span><span class="op">.</span><span class="fn">sort</span>(<span class="va">key</span><span class="op">=</span><span class="kw">lambda</span> <span class="va">i</span><span class="op">:</span> <span class="va">i</span>[<span class="st">"amount"</span>], <span class="va">reverse</span><span class="op">=</span><span class="kw">True</span>)</pre>
+<span class="cm"># Sort payments by amount, largest first</span>
+<span class="va">payments</span><span class="op">.</span><span class="fn">sort</span>(<span class="va">key</span><span class="op">=</span><span class="kw">lambda</span> <span class="va">p</span><span class="op">:</span> <span class="va">p</span>[<span class="st">"amount"</span>], <span class="va">reverse</span><span class="op">=</span><span class="kw">True</span>)</pre>
               </div>
               <div class="scenario">
                 <div class="scenario-label">
@@ -1218,7 +1231,7 @@
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.5 3h3l-2.5 2 1 3L6 7.5 3 9l1-3L1.5 4h3z" stroke="#5032A0" stroke-width="1" fill="none"/></svg>
                   Worksuite Scenario
                 </div>
-                <p>Worksuite's API returns <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">days_until_renewal</code> as a string in some endpoints. When you try <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">days_until_renewal &lt; 30</code>, Python throws <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">TypeError</code>. Fix: <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">int(days_until_renewal) &lt; 30</code>.</p>
+                <p>The Worksuite API occasionally returns numeric fields like <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">hourly_rate</code> as a string (<code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">"125.00"</code>) depending on the endpoint version. When you try <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">hourly_rate * hours_worked</code>, Python throws <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">TypeError</code>. Fix: <code style="font-family:var(--font-mono);font-size:13px;background:#eee;padding:1px 5px;border-radius:3px;">float(partner["hourly_rate"]) * hours_worked</code>.</p>
               </div>
             </div>
           </div>
@@ -1240,13 +1253,13 @@
             <div class="topic-card-body">
               <p class="concept-text">Wrap risky code in a <strong>try</strong> block. If it fails, the <strong>except</strong> block catches it and lets you handle it gracefully. <strong>finally</strong> always runs — use it for cleanup. This is what separates a fragile script from a reliable one.</p>
               <div class="code-block">
-                <pre><span class="kw">for</span> <span class="va">client</span> <span class="kw">in</span> <span class="va">client_exports</span><span class="op">:</span>
+                <pre><span class="kw">for</span> <span class="va">partner</span> <span class="kw">in</span> <span class="va">partners</span><span class="op">:</span>
     <span class="kw">try</span><span class="op">:</span>
-        <span class="fn">process_export</span>(<span class="va">client</span>[<span class="st">"file"</span>])
+        <span class="fn">process_payment</span>(<span class="va">partner</span>[<span class="st">"id"</span>])
     <span class="kw">except</span> <span class="va">KeyError</span> <span class="kw">as</span> <span class="va">e</span><span class="op">:</span>
-        <span class="fn">log_error</span>(<span class="va">client</span>[<span class="st">"name"</span>], <span class="st">f"Missing field: </span><span class="va">{e}</span><span class="st">"</span>)
+        <span class="fn">log_error</span>(<span class="va">partner</span>[<span class="st">"display_name"</span>], <span class="st">f"Missing field: </span><span class="va">{e}</span><span class="st">"</span>)
     <span class="kw">except</span> <span class="va">FileNotFoundError</span><span class="op">:</span>
-        <span class="fn">log_error</span>(<span class="va">client</span>[<span class="st">"name"</span>], <span class="st">"Export file not found"</span>)
+        <span class="fn">log_error</span>(<span class="va">partner</span>[<span class="st">"display_name"</span>], <span class="st">"Export file not found"</span>)
     <span class="kw">finally</span><span class="op">:</span>
         <span class="fn">close_connection</span>()  <span class="cm"># always runs</span></pre>
               </div>
@@ -1278,13 +1291,13 @@
               <p class="concept-text"><strong>Print debugging</strong> is the fastest first move — add print statements to inspect variable values at key points. <strong>The debugger</strong> lets you set breakpoints and step through code line by line. <strong>Read the traceback</strong> — it tells you the exact file, line number, and error type. Rubber duck debugging (explaining your code out loud) works surprisingly well for logic errors.</p>
               <div class="code-block">
                 <pre><span class="cm"># Print debugging — inspect values at the key moment</span>
-<span class="fn">print</span>(<span class="st">f"rate: </span><span class="va">{rate}</span><span class="st">, hours: </span><span class="va">{hours}</span><span class="st">, total: </span><span class="va">{total}</span><span class="st">"</span>)
+<span class="fn">print</span>(<span class="st">f"rate: </span><span class="va">{partner['hourly_rate']}</span><span class="st">, hours: </span><span class="va">{hours}</span><span class="st">, total: </span><span class="va">{total}</span><span class="st">"</span>)
 
 <span class="cm"># Safe dict lookup — avoids KeyError crashes</span>
-<span class="va">tax_id</span> <span class="op">=</span> <span class="va">contractor</span><span class="op">.</span><span class="fn">get</span>(<span class="st">"tax_id"</span>, <span class="st">"Not provided"</span>)
+<span class="va">tax_id</span> <span class="op">=</span> <span class="va">partner</span><span class="op">.</span><span class="fn">get</span>(<span class="st">"tax_id"</span>, <span class="st">"Not provided"</span>)
 
 <span class="cm"># Check type when behavior is unexpected</span>
-<span class="fn">print</span>(<span class="fn">type</span>(<span class="va">days_until_renewal</span>))  <span class="cm"># str? int?</span></pre>
+<span class="fn">print</span>(<span class="fn">type</span>(<span class="va">partner</span>[<span class="st">"hourly_rate"</span>]))  <span class="cm"># str? float?</span></pre>
               </div>
               <div class="scenario">
                 <div class="scenario-label">
@@ -1344,10 +1357,11 @@
     <span class="kw">assert</span> <span class="fn">utilization_rate</span>(<span class="nm">0</span>, <span class="nm">200</span>)   <span class="op">==</span> <span class="nm">0.0</span>
     <span class="kw">assert</span> <span class="fn">utilization_rate</span>(<span class="nm">200</span>, <span class="nm">200</span>) <span class="op">==</span> <span class="nm">100.0</span>
 
-<span class="cm"># Fixture — reusable test contractor</span>
+<span class="cm"># Fixture — reusable test partner matching /rest/v1/partners/{id}/ shape</span>
 <span class="op">@</span><span class="fn">pytest.fixture</span>
-<span class="kw">def</span> <span class="fn">sample_contractor</span>()<span class="op">:</span>
-    <span class="kw">return</span> {<span class="st">"name"</span><span class="op">:</span> <span class="st">"Test User"</span>, <span class="st">"rate"</span><span class="op">:</span> <span class="nm">100.00</span>, <span class="st">"status"</span><span class="op">:</span> <span class="st">"Active"</span>}</pre>
+<span class="kw">def</span> <span class="fn">sample_partner</span>()<span class="op">:</span>
+    <span class="kw">return</span> {<span class="st">"id"</span><span class="op">:</span> <span class="st">"prt_test01"</span>, <span class="st">"display_name"</span><span class="op">:</span> <span class="st">"Test User"</span>,
+            <span class="st">"hourly_rate"</span><span class="op">:</span> <span class="nm">100.00</span>, <span class="st">"status"</span><span class="op">:</span> <span class="st">"active"</span>}</pre>
               </div>
               <div class="scenario">
                 <div class="scenario-label">
